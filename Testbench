@@ -1,0 +1,48 @@
+`timescale 1ns/1ps
+
+module tb_slot_machine;
+
+reg clk;
+reg reset;
+reg spin;
+
+wire [2:0] reel1;
+wire [2:0] reel2;
+wire [2:0] reel3;
+wire jackpot;
+
+slot_machine uut(
+    .clk(clk),
+    .reset(reset),
+    .spin(spin),
+    .reel1(reel1),
+    .reel2(reel2),
+    .reel3(reel3),
+    .jackpot(jackpot)
+);
+
+always #5 clk = ~clk;
+
+initial begin
+    clk = 0;
+    reset = 1;
+    spin = 0;
+
+    #10;
+    reset = 0;
+
+    repeat(20) begin
+        #10 spin = 1;
+        #10 spin = 0;
+    end
+
+    #20;
+    $finish;
+end
+
+initial begin
+    $dumpfile("slot.vcd");
+    $dumpvars(0, tb_slot_machine);
+end
+
+endmodule
